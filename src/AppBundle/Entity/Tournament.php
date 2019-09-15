@@ -16,16 +16,6 @@ use Doctrine\ORM\Mapping\OrderBy;
  */
 class Tournament
 {
-    public function __construct()
-    {
-        $this->userAdmin = new ArrayCollection();
-        $this->signUpTournament = new ArrayCollection();
-        $this->schedule = new ArrayCollection();
-        $this->info = new ArrayCollection();
-        $this->fights = new ArrayCollection();
-        $this->awards = new ArrayCollection();
-    }
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -116,6 +106,21 @@ class Tournament
      */
     private $capacity = 0;
 
+    /**
+     * @ORM\OneToMany(targetEntity="UserAdminTournament", cascade={"persist"}, mappedBy="tournament")
+     */
+    private $userAdmin;
+
+    public function __construct()
+    {
+        $this->userAdmin = new ArrayCollection();
+        $this->signUpTournament = new ArrayCollection();
+        $this->schedule = new ArrayCollection();
+        $this->info = new ArrayCollection();
+        $this->fights = new ArrayCollection();
+        $this->awards = new ArrayCollection();
+    }
+
     public function getPaymentInfo(): string
     {
         return
@@ -170,16 +175,6 @@ class Tournament
     {
         return $this->id;
     }
-
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="UserAdminTournament",
-     *     cascade={"persist"},
-     *     mappedBy="tournament")
-     */
-    private $userAdmin;
-
 
     public function getUserAdmin()
     {
@@ -339,7 +334,4 @@ class Tournament
     {
         return $this->awards;
     }
-
-
 }
-
