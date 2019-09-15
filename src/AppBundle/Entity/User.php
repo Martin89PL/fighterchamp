@@ -35,15 +35,6 @@ class User implements UserInterface, Serializable
     public const TYPE_COACH = 2;
     public const TYPE_FAN = 3;
 
-    public function __construct()
-    {
-        $this->signUpTournaments = new ArrayCollection();
-        $this->tournamentAdmin = new ArrayCollection();
-        $this->userFights = new ArrayCollection();
-        $this->userCoachCoaches = new ArrayCollection();
-        $this->userCoachFighters = new ArrayCollection();
-    }
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -213,29 +204,13 @@ class User implements UserInterface, Serializable
      */
     private $roles = ['ROLE_USER'];
 
-    public function isFighter(): bool
+    public function __construct()
     {
-        return self::TYPE_FIGHTER === 1;
-    }
-
-    public function isCoach(): bool
-    {
-        return self::TYPE_FIGHTER === 2;
-    }
-
-    public function isFan(): bool
-    {
-        return self::TYPE_FIGHTER === 3;
-    }
-
-    public function isValid(): bool
-    {
-        return $this->valid;
-    }
-
-    public function validate(): void
-    {
-        $this->valid = true;
+        $this->signUpTournaments = new ArrayCollection();
+        $this->tournamentAdmin = new ArrayCollection();
+        $this->userFights = new ArrayCollection();
+        $this->userCoachCoaches = new ArrayCollection();
+        $this->userCoachFighters = new ArrayCollection();
     }
 
     public function getHash(): string
@@ -309,27 +284,15 @@ class User implements UserInterface, Serializable
         return $this->password;
     }
 
-    public function getSalt()
-    {
-        // TODO: Implement getSalt() method.
-    }
-
     public function eraseCredentials()
     {
         $this->plain_password = null;
     }
 
-    public function __call($name, $arguments)
-    {
-        // TODO: Implement __call() method.
-    }
-
-
     public function getEmail()
     {
         return $this->email;
     }
-
 
     public function getId()
     {
@@ -341,36 +304,30 @@ class User implements UserInterface, Serializable
         return $this->name;
     }
 
-
     public function getSurname()
     {
         return $this->surname;
     }
-
 
     public function setSurname($surname)
     {
         $this->surname = $surname;
     }
 
-
     public function getBirthDay()
     {
         return $this->birthDay;
     }
-
 
     public function setBirthDay(DateTime $birthDay)
     {
         $this->birthDay = $birthDay;
     }
 
-
     public function getClub()
     {
         return $this->club;
     }
-
 
     public function setClub($club)
     {
@@ -492,5 +449,15 @@ class User implements UserInterface, Serializable
         }
 
         return $fights;
+    }
+
+    public function getSalt()
+    {
+        return false;
+    }
+
+    public function getMaleWithName(): string
+    {
+        return ($this->male) ? "male" : "female";
     }
 }
