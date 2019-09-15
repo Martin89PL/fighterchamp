@@ -51,7 +51,7 @@ class UserController extends Controller
             return $this->redirectToRoute("login");
         }
 
-        $json = $this->get('serializer.my')->normalize($this->getUser());
+        $json = $this->get('serializer')->normalize($this->getUser());
 
         return $this->render('user/edit.html.twig',
             [
