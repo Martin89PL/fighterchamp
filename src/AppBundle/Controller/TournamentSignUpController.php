@@ -3,8 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Tournament;
+use AppBundle\Entity\User;
 use AppBundle\Form\SignUpTournamentType;
 use AppBundle\Entity\SignUpTournament;
+use AppBundle\Repository\FightRepository;
+use AppBundle\Repository\SignUpTournamentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -23,25 +26,22 @@ class TournamentSignUpController extends Controller
     public function signUpAction(Tournament $tournament, SerializerInterface $serializer, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        /** @var SignUpTournamentRepository $signUpTournamentRepository */
+        $signUpTournamentRepository = $em->getRepository('AppBundle:SignUpTournament');
 
-        $signUpTournament = $this->getDoctrine()
-            ->getRepository('AppBundle:SignUpTournament')
-            ->findAllSortByMaleClassWeightSurname($tournament);
+        $signUpTournament = $signUpTournamentRepository->findAllSortByMaleClassWeightSurname($tournament);
+        $users = $signUpTournamentRepository->signUpUserOrder($tournament);
 
-        $users = $em->getRepository('AppBundle:SignUpTournament')
-            ->signUpUserOrder($tournament);
+        /** @var FightRepository $fightRepository */
+        $fightRepository = $em->getRepository('AppBundle:Fight');
 
-        $fights = $em->getRepository('AppBundle:Fight')
-            ->fightReadyOrderBy($tournament);
-
-
+        $fights = $fightRepository->fightReadyOrderBy($tournament);
 
 
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER') && ($this->getUser())->getType() != 3) {
-
+            /** @var User $user */
             $user = $this->getUser();
-
-            $isUserRegister = $em->getRepository('AppBundle:SignUpTournament')
+            $isUserRegister = $signUpTournamentRepository
                 ->findOneBy([
                     'user' => $user->getId(),
                     'tournament' => $tournament,
@@ -51,34 +51,27 @@ class TournamentSignUpController extends Controller
             $birthDay = $user->getBirthDay();
             $tournamentDay = $tournament->getStart();
 
-
             $date_diff = date_diff($birthDay, $tournamentDay);
             $date_diff = $date_diff->format("%y");
 
-
-            if($date_diff <=16){
+            if ($date_diff <= 16) {
                 $age = 'kadet';
-            }elseif ($date_diff <= 18){
+            } elseif ($date_diff <= 18) {
                 $age = 'junior';
-            }else{
+            } else {
                 $age = 'senior';
             }
 
-            $male = $user->getMale();
-            $sex = ($male) ? "male" : "female";
-
-
             $traitChoices = $em->getRepository('AppBundle:Ruleset')
-                ->findBy([$sex => true, $age => true],['weight' => 'ASC']);
+                ->findBy([$user->getMaleWithName() => true, $age => true], ['weight' => 'ASC']);
 
 
             $arr = [];
-
             foreach ($traitChoices as $key => $value) {
                 $arr = $arr + [$value->getWeight() => $value->getWeight()];
             }
 
-            $isAlreadySignUp = $em->getRepository('AppBundle:SignUpTournament')
+            $isAlreadySignUp = $signUpTournamentRepository
                 ->findOneBy(
                     [
                         'tournament' => $tournament,
@@ -86,49 +79,29 @@ class TournamentSignUpController extends Controller
                         'deleted_at' => null
                     ]);
 
-            if($isAlreadySignUp){
-                $form = $this->createForm(SignUpTournamentType::class,$isAlreadySignUp,
-                    ['trait_choices' => $arr]
-                );
-            }else{
-                $form = $this->createForm(SignUpTournamentType::class, new SignUpTournament($user, $tournament),
-                    ['trait_choices' => $arr]
-                );
-            }
+            $isAlreadySignUp = $isAlreadySignUp ?? new SignUpTournament($user, $tournament);
 
-
+            $form = $this->createForm(SignUpTournamentType::class, $isAlreadySignUp, ['trait_choices' => $arr]);
             $form->handleRequest($request);
 
-
             if ($form->isSubmitted() && $form->isValid()) {
-
                 $signUpTournament = $form->getData();
-
-                if(!$isAlreadySignUp) {
-
-                    $em->persist($signUpTournament);
-
-                }
-                    $em->flush();
-
+                $em->persist($signUpTournament);
+                $em->flush();
                 return $this->redirectToRoute("tournament_sign_up", ['id' => $tournament->getId()]);
             }
 
-            $formDelete = $this->createFormBuilder($isUserRegister)
-                ->getForm();
-
+            $formDelete = $this->createFormBuilder($isUserRegister)->getForm();
             $formDelete->handleRequest($request);
 
             if ($formDelete->isValid()) {
-
-                //todo sometimes isUserRegister is null - error 500
                 $isUserRegister->delete();
                 $em->flush();
                 return $this->redirectToRoute("tournament_sign_up", ['id' => $tournament->getId()]);
             }
 
 
-            if ($date_diff <=14) {
+            if ($date_diff <= 14) {
                 $age = 'młodzik';
             }
 
