@@ -2,18 +2,18 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Ruleset;
 use AppBundle\Entity\Tournament;
 use AppBundle\Entity\User;
 use AppBundle\Form\SignUpTournamentType;
 use AppBundle\Entity\SignUpTournament;
 use AppBundle\Repository\FightRepository;
 use AppBundle\Repository\SignUpTournamentRepository;
+use AppBundle\Util\AgeCategoryConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Serializer\SerializerInterface;
-
-//todo REFACTOR!!!
 
 /**
  * @Route("/turnieje")
@@ -54,34 +54,15 @@ class TournamentSignUpController extends Controller
             $date_diff = date_diff($birthDay, $tournamentDay);
             $date_diff = $date_diff->format("%y");
 
-            if ($date_diff <= 16) {
-                $age = 'kadet';
-            } elseif ($date_diff <= 18) {
-                $age = 'junior';
-            } else {
-                $age = 'senior';
-            }
-
             $traitChoices = $em->getRepository('AppBundle:Ruleset')
-                ->findBy([$user->getMaleWithName() => true, $age => true], ['weight' => 'ASC']);
+                ->findBy([
+                    $user->getMaleWithName() => true,
+                    AgeCategoryConverter::convert($date_diff) => true
+                ], ['weight' => 'ASC']);
 
+            $isAlreadySignUp = $isUserRegister ?? new SignUpTournament($user, $tournament);
 
-            $arr = [];
-            foreach ($traitChoices as $key => $value) {
-                $arr = $arr + [$value->getWeight() => $value->getWeight()];
-            }
-
-            $isAlreadySignUp = $signUpTournamentRepository
-                ->findOneBy(
-                    [
-                        'tournament' => $tournament,
-                        'user' => $user,
-                        'deleted_at' => null
-                    ]);
-
-            $isAlreadySignUp = $isAlreadySignUp ?? new SignUpTournament($user, $tournament);
-
-            $form = $this->createForm(SignUpTournamentType::class, $isAlreadySignUp, ['trait_choices' => $arr]);
+            $form = $this->createForm(SignUpTournamentType::class, $isAlreadySignUp, ['trait_choices' => $traitChoices]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -101,14 +82,9 @@ class TournamentSignUpController extends Controller
             }
 
 
-            if ($date_diff <= 14) {
-                $age = 'młodzik';
-            }
-
             return $this->render('tournament/sign_up.twig', array(
                 'form' => $form->createView(),
                 'formDelete' => $formDelete->createView(),
-                'age' => $age,
                 'tournament' => $tournament,
                 'users' => $users,
                 'date_diff' => $date_diff,

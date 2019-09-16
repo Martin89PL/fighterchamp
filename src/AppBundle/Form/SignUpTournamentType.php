@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Ruleset;
 use AppBundle\Entity\SignUpTournament;
 use Doctrine\DBAL\Types\BooleanType;
 use Symfony\Component\Form\AbstractType;
@@ -27,13 +28,12 @@ class SignUpTournamentType extends AbstractType
                 ]])
             ->add('trainingTime', IntegerType::class)
             ->add('weight', ChoiceType::class, [
-                'choices'  => $trait
+                'choices'  => $trait,
+                'choice_label' => function(Ruleset $ruleset) {
+                    return $ruleset->getWeight();
+                }
                 ])
-            ->add('isLicence', CheckboxType::class)
-//            ->add('youtubeId', TextType::class)
-//            ->add('musicArtistAndTitle', TextType::class)
-
-           ;
+            ->add('isLicence', CheckboxType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
