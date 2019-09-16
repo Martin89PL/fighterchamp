@@ -17,7 +17,6 @@ class Ruleset
      */
     private $id;
 
-
     /**
      * @ORM\Column(type="string")
      */
@@ -150,6 +149,21 @@ class Ruleset
         $this->id = $id;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getKadet()
+    {
+        return $this->kadet;
+    }
+
+    /**
+     * @param mixed $kadet
+     */
+    public function setKadet($kadet): void
+    {
+        $this->kadet = $kadet;
+    }
 
 
 }
