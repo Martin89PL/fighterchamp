@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Enum;
 use MyCLabs\Enum\Enum;
 
-
 /**
  * @method static UserFightResult WIN()
  * @method static UserFightResult WIN_KO()

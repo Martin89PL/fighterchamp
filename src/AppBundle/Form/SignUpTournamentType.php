@@ -17,8 +17,6 @@ class SignUpTournamentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $trait = $options['trait_choices'];
-
         $builder
             ->add('formula', ChoiceType::class, [
                 'choices'  => [
@@ -28,8 +26,11 @@ class SignUpTournamentType extends AbstractType
                 ]])
             ->add('trainingTime', IntegerType::class)
             ->add('weight', ChoiceType::class, [
-                'choices'  => $trait,
-                'choice_label' => function(Ruleset $ruleset) {
+                'choices'  => $options['trait_choices'],
+                'choice_value' => function ($ruleset = null) {
+                    return $ruleset ? $ruleset : '';
+                },
+                'choice_label' => function (Ruleset $ruleset) {
                     return $ruleset->getWeight();
                 }
                 ])

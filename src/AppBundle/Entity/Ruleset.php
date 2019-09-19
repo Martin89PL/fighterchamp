@@ -22,7 +22,6 @@ class Ruleset
      */
     private $weight;
 
-
     /**
      * @ORM\Column(type="boolean")
      */
@@ -52,6 +51,10 @@ class Ruleset
      */
     private $kadet;
 
+    public function __toString()
+    {
+        return $this->getWeight();
+    }
 
     /**
      * @return mixed
