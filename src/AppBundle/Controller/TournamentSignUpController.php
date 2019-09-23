@@ -11,7 +11,6 @@ use AppBundle\Repository\SignUpTournamentRepository;
 use AppBundle\Util\AgeCategoryConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -21,16 +20,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class TournamentSignUpController extends Controller
 {
     /**
-     * @Route("/{id}/admin", name="tournament_sign_up_test")
-     */
-    public function testAction()
-    {
-        return new Response(
-            '<html><body>Lucky number: </body></html>'
-        );
-    }
-
-    /**
      * @Route("/{id}/zapisy", name="tournament_sign_up")
      */
     public function signUpAction(Tournament $tournament, SerializerInterface $serializer, Request $request)
@@ -38,39 +27,29 @@ class TournamentSignUpController extends Controller
         $em = $this->getDoctrine()->getManager();
         /** @var SignUpTournamentRepository $signUpTournamentRepository */
         $signUpTournamentRepository = $em->getRepository('AppBundle:SignUpTournament');
-
         $signUpTournament = $signUpTournamentRepository->findAllSortByMaleClassWeightSurname($tournament);
-        $users = $signUpTournamentRepository->signUpUserOrder($tournament);
 
         /** @var FightRepository $fightRepository */
         $fightRepository = $em->getRepository('AppBundle:Fight');
-
         $fights = $fightRepository->fightReadyOrderBy($tournament);
 
         $form = null;
         $formDelete = null;
         $isUserRegister = null;
 
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_USER') && ($this->getUser())->getType() != 3) {
+        if ($this->get('security.authorization_checker')->isGranted('CAN_TOURNAMENT_ACTON', $tournament)) {
             /** @var User $user */
             $user = $this->getUser();
-            $isUserRegister = $signUpTournamentRepository
-                ->findOneBy([
-                    'user' => $user->getId(),
-                    'tournament' => $tournament,
-                    'deleted_at' => null
-                ]);
+            $isUserRegister = $signUpTournamentRepository->findUserRegisteredTournaments($user, $tournament);
 
-            $birthDay = $user->getBirthDay();
-            $tournamentDay = $tournament->getStart();
+            $redirectUrl = $this->redirectToRoute("tournament_sign_up", ['id' => $tournament->getId()]);
 
-            $date_diff = date_diff($birthDay, $tournamentDay);
-            $date_diff = $date_diff->format("%y");
+            $dateDiff = (date_diff($user->getBirthDay(), $tournament->getStart()))->format("%y");
 
             $weightCategories = $em->getRepository('AppBundle:Ruleset')
                 ->findBy([
                     $user->getMaleWithName() => true,
-                    AgeCategoryConverter::convert($date_diff) => true
+                    AgeCategoryConverter::convert($dateDiff) => true
                 ], ['weight' => 'ASC']);
 
             $isAlreadySignUp = $isUserRegister ?? new SignUpTournament($user, $tournament);
@@ -79,10 +58,9 @@ class TournamentSignUpController extends Controller
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $signUpTournament = $form->getData();
-                $em->persist($signUpTournament);
+                $em->persist($form->getData());
                 $em->flush();
-                return $this->redirectToRoute("tournament_sign_up", ['id' => $tournament->getId()]);
+                return $redirectUrl;
             }
 
             $formDelete = $this->createFormBuilder($isUserRegister)->getForm();
@@ -91,19 +69,18 @@ class TournamentSignUpController extends Controller
             if ($formDelete->isValid()) {
                 $isUserRegister->delete();
                 $em->flush();
-                return $this->redirectToRoute("tournament_sign_up", ['id' => $tournament->getId()]);
+                return $redirectUrl;
             }
         }
 
-        return $this->render('tournament/sign_up.twig', array(
+        return $this->render('tournament/sign_up.twig', [
             'form' => (!empty($form)) ?  $form->createView(): null,
             'formDelete' => (!empty($form)) ? $formDelete->createView() : null,
             'tournament' => $tournament,
-            'users' => $users,
+            'users' => $signUpTournamentRepository->signUpUserOrder($tournament),
             'fights' => $fights,
             'isUserRegister' => $isUserRegister,
             'signUpTournament' => $serializer->normalize($signUpTournament),
-        ));
-
+        ]);
     }
 }
