@@ -374,7 +374,7 @@ class User implements UserInterface, Serializable
     {
         $criteria = Criteria::create();
         $criteria->where(Criteria::expr()->eq('tournament', $tournament));
-        $criteria->andWhere(Criteria::expr()->eq('deleted_at', null));
+        $criteria->andWhere(Criteria::expr()->eq('deletedAt', null));
         $criteria->getFirstResult();
 
         return $this->signUpTournaments->matching($criteria)->first();

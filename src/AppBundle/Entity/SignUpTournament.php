@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppBundle\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
-use Faker\Provider\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,14 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SignUpTournament
 {
-
-    public function __construct(User $user, Tournament $tournament)
-    {
-        $this->user = $user;
-        $this->tournament = $tournament;
-        $this->created_at = new \DateTime();
-    }
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -68,9 +60,9 @@ class SignUpTournament
     private $isLicence = false;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime",name="deleted_at",  nullable=true)
      */
-    private $deleted_at;
+    private $deletedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -87,10 +79,9 @@ class SignUpTournament
     private $trainingTime;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="created_at")
      */
-    private $created_at;
-
+    private $createdAt;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -98,14 +89,20 @@ class SignUpTournament
      */
     private $youtubeId = '';
 
-
     /**
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     private $musicArtistAndTitle = '';
 
-    public function getIsLicence()
+    public function __construct(User $user, Tournament $tournament)
+    {
+        $this->user = $user;
+        $this->tournament = $tournament;
+        $this->createdAt = new \DateTime();
+    }
+
+    public function getIsLicence() : bool
     {
         return $this->isLicence;
     }
@@ -115,103 +112,82 @@ class SignUpTournament
         $this->isLicence = $isLicence;
     }
 
-    public function getTrainingTime()
+    public function getTrainingTime() :?int
     {
         return $this->trainingTime;
     }
 
-
-    public function setTrainingTime($trainingTime)
+    public function setTrainingTime($trainingTime) : void
     {
         $this->trainingTime = $trainingTime;
     }
 
-
-    public function getDeletedAt()
+    public function getDeletedAt() : ? \DateTime
     {
-        return $this->deleted_at;
+        return $this->deletedAt;
     }
 
-
-    public function delete()
+    public function delete() : void
     {
-        $this->deleted_at = new \DateTime();
+        $this->deletedAt = new \DateTime();
     }
 
-
-    public function isPaid()
+    public function isPaid() : bool
     {
         return $this->isPaid;
     }
 
-    public function setIsPaid($isPaid)
+    public function setIsPaid($isPaid) : void
     {
         $this->isPaid = $isPaid;
     }
 
-
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
-
 
     public function getWeight(): ?string
     {
         return $this->weight;
     }
 
-
-    public function setWeight($weight)
+    public function setWeight($weight) : void
     {
         $this->weight = $weight;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFormula()
+    public function getFormula() : ?string
     {
         return $this->formula;
     }
 
-    /**
-     * @param mixed $formula
-     */
-    public function setFormula($formula)
+    public function setFormula($formula) : void
     {
         $this->formula = $formula;
     }
-
 
     public function getTournament() : Tournament
     {
         return $this->tournament;
     }
 
-    /**
-     * @param mixed $tournament
-     */
-    public function setTournament($tournament)
+    public function setTournament($tournament) : void
     {
         $this->tournament = $tournament;
     }
-
 
     public function getUser() : User
     {
         return $this->user;
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function setUser($user)
+    public function setUser(User $user) : void
     {
         $this->user = $user;
     }
 
-    public function getStazTreningowy()
+    public function getTrainingInternship() : ?string
     {
         if($this->getTrainingTime()){
             return '(staż ' . $this->getTrainingTime() . "miesiące) ";
@@ -219,18 +195,17 @@ class SignUpTournament
         return null;
     }
 
-
-    public function getWeighted()
+    public function getWeighted() : ?string
     {
         return $this->weighted;
     }
 
-    public function setWeighted($weighted)
+    public function setWeighted($weighted) : void
     {
         $this->weighted = $weighted;
     }
 
-    public function getFinallWeight()
+    public function getFinalWeight()
     {
         return $this->weighted ?? $this->weight;
     }
@@ -251,7 +226,7 @@ class SignUpTournament
         return $this->musicArtistAndTitle;
     }
 
-    public function setMusicArtistAndTitle(?string $musicArtistAndTitle = '')
+    public function setMusicArtistAndTitle(?string $musicArtistAndTitle = '') : void
     {
         $this->musicArtistAndTitle = $musicArtistAndTitle;
     }

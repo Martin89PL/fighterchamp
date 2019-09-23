@@ -1,21 +1,18 @@
 <?php
 
-
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Tournament;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
-
 
 class SignUpTournamentRepository extends EntityRepository
 {
-
-
     public function findAllSignUpsPaidButDeleted($tournament)
     {
         $qb = $this->createQueryBuilder('signUpTournament')
             ->andWhere('signUpTournament.tournament = :tournament')
-            ->andWhere('signUpTournament.deleted_at is not null')
+            ->andWhere('signUpTournament.deletedAt is not null')
             ->andWhere('signUpTournament.isPaid = true')
             ->setParameter('tournament', $tournament);
 
@@ -28,7 +25,7 @@ class SignUpTournamentRepository extends EntityRepository
         $qb = $this->createQueryBuilder('signUpTournament')
             ->leftJoin('signUpTournament.user', 'user')
             ->andWhere('signUpTournament.tournament = :tournament')
-            ->andWhere('signUpTournament.deleted_at is null')
+            ->andWhere('signUpTournament.deletedAt is null')
             ->andWhere('signUpTournament.isPaid = true')
             ->setParameter('tournament', $tournament)
             ->addOrderBy('user.surname');
@@ -42,7 +39,7 @@ class SignUpTournamentRepository extends EntityRepository
         $qb = $this->createQueryBuilder('signUpTournament')
             ->leftJoin('signUpTournament.user', 'user')
             ->andWhere('signUpTournament.tournament = :tournament')
-            ->andWhere('signUpTournament.deleted_at is null')
+            ->andWhere('signUpTournament.deletedAt is null')
             ->andWhere('signUpTournament.isPaid = true')
 //            ->andWhere('signUpTournament.fights is empty' )
             ->setParameter('tournament', $tournament)
@@ -60,7 +57,7 @@ class SignUpTournamentRepository extends EntityRepository
             ->leftJoin('signUpTournament.user', 'user')
             ->addSelect('user')
             ->andWhere('signUpTournament.tournament = :tournament')
-            ->andWhere('signUpTournament.deleted_at is null')
+            ->andWhere('signUpTournament.deletedAt is null')
             ->setParameter('tournament', $tournament)
             ->addOrderBy('user.male')
             ->addOrderBy('signUpTournament.formula')
@@ -76,9 +73,9 @@ class SignUpTournamentRepository extends EntityRepository
             ->leftJoin('signUpTournament.user', 'user')
             ->addSelect('user')
             ->andWhere('signUpTournament.tournament = :tournament')
-            ->andWhere('signUpTournament.deleted_at is not null')
+            ->andWhere('signUpTournament.deletedAt is not null')
             ->setParameter('tournament', $tournament)
-            ->addOrderBy('signUpTournament.deleted_at', 'desc');
+            ->addOrderBy('signUpTournament.deletedAt', 'desc');
 
         $query = $qb->getQuery();
         return $query->execute();
@@ -126,29 +123,22 @@ JOIN fight f ON uf.fight_id = f.id
 WHERE f.tournament_id = $tournamentId)");
 
 
-
         $stmt->execute();
-
         return $stmt->fetchAll();
-
     }
-
-
 
     public function findAllSortByMaleClassWeightSurname($tournament)
     {
         $qb = $this->createQueryBuilder('signUpTournament')
             ->leftJoin('signUpTournament . user', 'user')
-            ->andWhere('signUpTournament . tournament = :tournament')
-            ->andWhere('signUpTournament . deleted_at is null')
+            ->andWhere('signUpTournament.tournament = :tournament')
+            ->andWhere('signUpTournament.deletedAt is null')
             ->setParameter('tournament', $tournament)
             ->addSelect('user')
             ->addOrderBy('user . male')
             ->addOrderBy('signUpTournament . formula')
             ->addOrderBy('signUpTournament . weight')
-            ->addOrderBy('user . surname')
-
-        ;
+            ->addOrderBy('user . surname');
 
         $query = $qb->getQuery();
         return $query->execute();
@@ -157,26 +147,24 @@ WHERE f.tournament_id = $tournamentId)");
     public function findAllForTournament($tournament)
     {
         $qb = $this->createQueryBuilder('signUpTournament')
-            ->leftJoin('signUpTournament . user', 'user')
-            ->andWhere('signUpTournament . tournament = :tournament')
-            ->andWhere('signUpTournament . deleted_at is null')
+            ->leftJoin('signUpTournament.user', 'user')
+            ->andWhere('signUpTournament.tournament = :tournament')
+            ->andWhere('signUpTournament.deletedAt is null')
             ->andWhere('signUpTournament.deletedAtByAdmin is null')
             ->setParameter('tournament', $tournament)
             ->addSelect('user')
             ->addOrderBy('signUpTournament . weighted')
-            ->addOrderBy('user . surname')
-        ;
+            ->addOrderBy('user . surname');
 
-        $query = $qb->getQuery();
-        return $query->execute();
+        return $qb->getQuery()->execute();
     }
 
     public function findMusicForTournament(Tournament $tournament)
     {
         $qb = $this->createQueryBuilder('signUpTournament')
-            ->leftJoin('signUpTournament . user', 'user')
-            ->andWhere('signUpTournament . tournament = :tournament')
-            ->andWhere('signUpTournament . deleted_at is null')
+            ->leftJoin('signUpTournament.user', 'user')
+            ->andWhere('signUpTournament.tournament = :tournament')
+            ->andWhere('signUpTournament.deletedAt is null')
             ->andWhere('signUpTournament.deletedAtByAdmin is null')
             ->andWhere('signUpTournament.youtubeId is not null')
             ->setParameter('tournament', $tournament)
@@ -184,6 +172,15 @@ WHERE f.tournament_id = $tournamentId)");
 
         $query = $qb->getQuery();
         return $query->execute();
+    }
+
+    public function findUserRegisteredTournaments(User $user, Tournament $tournament)
+    {
+        return $this->findOneBy([
+            'user' => $user->getId(),
+            'tournament' => $tournament,
+            'deletedAt' => null
+        ]);
     }
 
 }
