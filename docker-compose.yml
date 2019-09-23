@@ -1,53 +1,46 @@
-php:
-  build: docker/php
-  volumes:
-    - ./:/var/www/html/
-  links:
-    - db
-    - db_test
+version: "3"
+services:
+  php:
+    build: docker/php
+    volumes:
+      - ./:/var/www/html/
 
-nginx:
-  build: docker/nginx
-  ports:
-    - 80:80
-  volumes_from:
-    - php
-  volumes:
-    - ./var/logs/nginx/:/var/log/nginx
-  links:
-    - php
+  nginx:
+    build: docker/nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./var/logs/nginx/:/var/log/nginx
 
-db:
-  build: docker/mysql
-  ports:
-      - "3310:3306"
-  environment:
-      MYSQL_DATABASE: "test"
+  db:
+    build: docker/mysql
+    ports:
+        - "3310:3306"
+    environment:
+        MYSQL_DATABASE: "test"
+        MYSQL_USER: "test"
+        MYSQL_PASSWORD: "test"
+        MYSQL_ROOT_PASSWORD: "test"
+
+  db_test:
+    build: docker/mysql
+    ports:
+      - "3311:3306"
+    environment:
+      MYSQL_DATABASE: "db_test"
       MYSQL_USER: "test"
       MYSQL_PASSWORD: "test"
       MYSQL_ROOT_PASSWORD: "test"
 
-db_test:
-  build: docker/mysql
-  ports:
-    - "3311:3306"
-  environment:
-    MYSQL_DATABASE: "db_test"
-    MYSQL_USER: "test"
-    MYSQL_PASSWORD: "test"
-    MYSQL_ROOT_PASSWORD: "test"
+  selenium-hub:
+    image: selenium/hub
+    ports:
+      - "4444"
 
-selenium-hub:
-  image: selenium/hub
-  ports:
-    - "4444"
-
-chrome-node:
-  image: selenium/node-chrome:3.141.59-oxygen
-  links:
-    - selenium-hub
-  environment:
-    - HUB_HOST=selenium-hub
-    - HUB_PORT=4444
-  ports:
-    - "5555"
+  chrome-node:
+    image: selenium/node-chrome:3.141.59-oxygen
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+    ports:
+      - "5555"
