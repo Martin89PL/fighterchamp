@@ -6,89 +6,72 @@
 
 {% block body %}
     {% include 'tournament/_parts/_panel.twig' %}
-
     <div class="main">
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
 
-                    {% if signUpOpen %}
-                            <p class="text-center">
-                                Zgłoszenia przyjmowane są do {{ macro.formatYMDdzienTygodnia(tournament.signUpTill) }}
-                            </p>
-                    {% else %}
+                    <p class="text-center">
+                        {% if signUpOpen %}
+                            Zgłoszenia przyjmowane są do {{ macro.formatYMDdzienTygodnia(tournament.signUpTill) }}
+                        {% else %}
                             {% if isTournamentEnded %}
-                                <p class="text-center">
-                                    Turniej zakończył się {{ macro.formatYMDdzienTygodnia(tournament.end) }}
-                                </p>
+                                Turniej zakończył się {{ macro.formatYMDdzienTygodnia(tournament.end) }}
                             {% else %}
-                            <p class="text-center">
                                 Termin przyjmowania zgłoszeń minął {{ macro.formatYMDdzienTygodnia(tournament.signUpTill) }}
-                            </p>
                             {% endif %}
-                    {% endif %}
+                        {% endif %}
+                    </p>
 
 
                     {% if not isAvailableSeats %}
-                            <p class="text-center">
-                                <strong>Limit miejsc został wyczerpany</strong>
-                            </p>
+                        <p class="text-center">
+                            <strong>Limit miejsc został wyczerpany</strong>
+                        </p>
                     {% endif %}
 
                     {% if not is_granted('ROLE_USER') %}
-                    <p>
-                        Aby edytować / skasować swoje zgłoszenie na turniej musisz być zalogowany! &#8594;
-                        <a href="{{ path ('login') }}">Przejdź do strony logowania</a>
-                    </p>
+                        <p>
+                            Aby edytować / skasować swoje zgłoszenie na turniej musisz być zalogowany! &#8594;
+                            <a href="{{ path ('login') }}">Przejdź do strony logowania</a>
+                        </p>
                     {% endif %}
 
                     {% if is_granted('ROLE_USER') %}
 
-                            {% if isUserRegister %}
-
-                                            <p>Twoje zgłoszenie na turniej zostało zarejestrowane:</p>
-                                            {% include 'tournament/_parts/_twojeZgloszeniehtml.twig' with { signUpTournament : [isUserRegister]} only %}
-                                            {% include 'tournament/_parts/skasuj_moje_zgloszenie_form.html.twig' %}
-
-                                    {% if signUpOpen %}
-
-                                            <br>
-                                            <button id="edit_button" class="btn btn-primary align-left">Edytuj</button>
-                                            <br>
-
-                                            <div id="edit_box" class="col-xs-12">
-                                                {% include 'tournament/_parts/show_sing_up_form_if_inssurance_data_ELSE_link_to_profile.html.twig' %}
-                                            </div>
-
-                                    {% else %}
-                                            <br>
-                                            <small>Termin przyjmowania i edycji zgłoszeń zakończył się. Obecnie możesz tylko skasować swoje zgłoszenie.</small>
-                                            <small>Jeśli skasujesz swoje zgłoszenie, nie będziesz mógł ponownie się zapisać!</small>
-                                            <br>
-
-                                    {% endif %}
-
-
-                                    {% if not isUserRegister.isPaid %}
-                                        <br>
-                                        <p>
-                                            <small>{{ include(template_from_string(tournament.paymentInfo)) }}</small>
-                                        </p>
-                                    {% endif %}
-
-                            {% elseif not isUserRegister %}
-
-                                {% if signUpOpen and isAvailableSeats %}
-
-                                    {% include 'tournament/_parts/show_sing_up_form_if_inssurance_data_ELSE_link_to_profile.html.twig' %}
-
-                                {% endif %}
-
+                        {% if isUserRegister %}
+                            <p>Twoje zgłoszenie na turniej zostało zarejestrowane:</p>
+                            {% include 'tournament/_parts/_user_tournament_registration.twig' with { signUpTournament : [isUserRegister]} only %}
+                            {% include 'tournament/_parts/delete_user_registration_tournament_form.html.twig' %}
+                            {% if signUpOpen %}
+                                <br>
+                                    <button id="edit_button" class="btn btn-primary align-left">Edytuj</button>
+                                <br>
+                                <div id="edit_box" class="col-xs-12">
+                                    {% include 'tournament/_parts/show_sing_up_form.html.twig' %}
+                                </div>
+                            {% else %}
+                                <br>
+                                <small>Termin przyjmowania i edycji zgłoszeń zakończył się. Obecnie możesz tylko
+                                    skasować swoje zgłoszenie.
+                                </small>
+                                <small>Jeśli skasujesz swoje zgłoszenie, nie będziesz mógł ponownie
+                                    się zapisać!
+                                </small>
+                                <br>
                             {% endif %}
 
+                            {% if not isUserRegister.isPaid %}
+                                <br>
+                                <p>
+                                    <small>{{ include(template_from_string(tournament.paymentInfo)) }}</small>
+                                </p>
+                            {% endif %}
+                        {% elseif not isUserRegister and signUpOpen and isAvailableSeats %}
+                                {% include 'tournament/_parts/show_sing_up_form.html.twig' %}
+                        {% endif %}
                     {% endif %}
-
-                    {% include 'tournament/_parts/_listaZapisanych.html.twig' %}
+                    {% include 'tournament/_parts/_tournament_users_list.html.twig' %}
                 </div>
             </div>
         </div>
@@ -114,14 +97,14 @@
                 $("#edit_box").toggle();
             });
 
-            $(document).ready(function(){
+            $(document).ready(function () {
                 var t = $('#table-signups').DataTable({
                     "language": {
                         "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Polish.json"
                     },
                     "bPaginate": false,
                     "dom": 'lifrtp',
-                    "order": [[ 2, "asc" ],[ 3, "asc" ],[ 4, "asc" ],[ 5, "asc" ] ]
+                    "order": [[2, "asc"], [3, "asc"], [4, "asc"], [5, "asc"]]
                 });
             });
 
