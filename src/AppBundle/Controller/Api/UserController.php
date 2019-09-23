@@ -167,12 +167,10 @@ class UserController extends Controller
         $type = $request->query->get('type', 1);
 
         if ($type == 1) {
-            $users = $em->getRepository(User::class)->findAllFighters();
-        } else {
-            $users = $em->getRepository(User::class)->findAllListAction($type);
+            return $em->getRepository(User::class)->findAllFighters();
         }
 
-        return $users;
+        return  $em->getRepository(User::class)->findAllListAction($type);
     }
 
     /**
