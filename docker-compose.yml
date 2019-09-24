@@ -38,9 +38,10 @@ services:
       - "4444"
 
   chrome-node:
-    image: selenium/node-chrome:3.141.59-oxygen
+    image: selenium/node-chrome-debug:3.141.5
     environment:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
     ports:
       - "5555"
+      - '5900'
