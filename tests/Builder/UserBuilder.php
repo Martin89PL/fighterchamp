@@ -10,6 +10,7 @@ class UserBuilder extends Builder
     public const DEFAULT_NAME = 'DefaultName';
     public const DEFAULT_SURNAME = 'DefaultSurname';
     public const DEFAULT_PASSWORD = 'password';
+    public const DEFAULT_EMAIL = 'default@mail.com';
     public const DEFAULT_TYPE = User::TYPE_FIGHTER;
 
     /**
@@ -32,6 +33,11 @@ class UserBuilder extends Builder
      */
     private $password = self::DEFAULT_PASSWORD;
 
+    /**
+     * @var string
+     */
+    private $email = self::DEFAULT_EMAIL;
+
     public function build(): User
     {
         $user = new User();
@@ -40,6 +46,7 @@ class UserBuilder extends Builder
         $user->setHash($this->faker->sha1);
         $user->setType($this->type);
         $user->setPlainPassword($this->password);
+        $user->setEmail($this->email);
 
         return $user;
     }
@@ -65,6 +72,12 @@ class UserBuilder extends Builder
     public function withPassword(string $password): self
     {
         $this->password = $password;
+        return $this;
+    }
+
+    public function withEmail(string $email): self
+    {
+        $this->email = $email;
         return $this;
     }
 }

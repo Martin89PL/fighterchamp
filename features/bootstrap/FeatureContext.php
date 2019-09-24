@@ -8,6 +8,7 @@ use Behat\MinkExtension\Context\RawMinkContext;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Tests\Builder\UserBuilder;
 
 require_once __DIR__ . '/../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -21,11 +22,17 @@ class FeatureContext extends RawMinkContext implements Context
      */
     private $em;
 
+    /**
+     * @var UserBuilder
+     */
+    private $userBuilder;
+
     public function __construct()
     {
-        $kernel = new AppKernel('test', true);
+        $kernel = new AppKernel('dev', true);
         $kernel->boot();
         $this->em = $kernel->getContainer()->get('doctrine')->getManager();
+        $this->userBuilder = new UserBuilder();
     }
 
     /**
@@ -47,17 +54,24 @@ class FeatureContext extends RawMinkContext implements Context
     }
 
     /**
+     * @When I close Symfony Dev Toolbar
+     */
+    public function iCloseSymfonyDevToolbar()
+    {
+        $this->getSession()->getPage()->find('css','.hide-button' )->click();
+    }
+
+
+    /**
      * @Given /^there is and admin user "([^"]*)" with password "([^"]*)"$/
      */
-    public function thereIsAndAdminUserWithPassword($arg1, $arg2)
+    public function thereIsAndAdminUserWithPassword($email, $password)
     {
-        $user = new User();
-        $user->setEmail($arg1);
-        $user->setPlainPassword($arg2);
-        $user->setName('Mario');
-        $user->setSurname('Brothers');
-        $user->setMale(true);
-
+        $user = $this->userBuilder
+            ->withName('user')
+            ->withEmail($email)
+            ->withPassword($password)
+            ->build();
 
         $this->em->persist($user);
         $this->em->flush();

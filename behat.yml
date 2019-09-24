@@ -1,10 +1,11 @@
 default:
   extensions:
-    Behat\Symfony2Extension: ~
     Behat\MinkExtension:
-      base_url:  'http://localhost:8000/app_test.php/'
+      base_url:  http://nginx
       goutte: ~
-      selenium2: ~
+      selenium2:
+        wd_host: http://selenium-hub:4444/wd/hub
+        browser: 'chrome'
 
   suites:
     my_suite:

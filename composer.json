@@ -46,18 +46,13 @@
 
 
   "require-dev": {
-    "behat/behat": "dev-master",
     "behat/mink": "dev-master",
-    "behat/mink-browserkit-driver": "dev-master",
-    "behat/mink-extension": "dev-master",
-    "behat/mink-goutte-driver": "dev-master",
-    "behat/mink-selenium2-driver": "dev-master",
-    "behat/symfony2-extension": "^2.1",
+    "behat/mink-extension": "^2.3",
+    "behat/mink-goutte-driver": "^1.2",
+    "behat/mink-selenium2-driver": "^1.3",
     "doctrine/data-fixtures": "^1.3",
-    "doctrine/doctrine-fixtures-bundle": "dev-master",
+    "doctrine/doctrine-fixtures-bundle": "^3.2",
     "fzaninotto/faker": "^1.7",
-    "liip/functional-test-bundle": "^3.1",
-    "phpmd/phpmd": "@dev",
     "phpunit/phpunit": "^7.0",
     "shopsys/http-smoke-testing": "^8.0",
     "symfony/phpunit-bridge": "^4.0"
