@@ -3,7 +3,7 @@ To setup encryption keys for JWT auth, run `make setup-keys`, enter your passphr
 
 To setup project just run 'make setup-project'
 
-##Behat
+## Behat
 To run behat tests just run command "make behat". 
 With tests that have @javascript annotation like login.feature -> Scenario: Register as Fighter you can see live how
 Selenium commands the browser. 
