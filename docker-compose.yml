@@ -11,6 +11,7 @@ services:
       - 80:80
     volumes:
       - ./var/logs/nginx/:/var/log/nginx
+      - ./:/var/www/html/
 
   db:
     build: docker/mysql
