@@ -31,6 +31,9 @@ db-load-fixtures:
 test:
 	${COMPOSE_EXEC_PHP} vendor/bin/phpunit
 
+behat:
+	${COMPOSE_EXEC_PHP} vendor/bin/behat
+
 test-fail-fast:
 	${COMPOSE_EXEC_PHP} vendor/bin/phpunit --stop-on-failure
 
