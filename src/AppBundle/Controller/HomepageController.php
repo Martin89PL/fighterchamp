@@ -19,7 +19,7 @@ class HomepageController extends Controller
 
         return $this->render(':main:homepage.html.twig', [
             'tournament' => $tournament,
-            'tournamentId' => isset($tournament) ? $tournament->id() : 0
+            'tournamentId' => isset($tournament) ? $tournament->getId() : 0
         ]);
     }
 }
