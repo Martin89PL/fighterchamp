@@ -1,18 +1,20 @@
  <table class="table table-striped">
         <thead>
             <th>Nazwisko i Imię</th>
+            <th class="text-center">Dyscyplina</th>
             <th class="text-center">Płeć</th>
             <th class="text-center">Klasa</th>
             <th class="text-center">Kat. Wagowa</th>
             <th class="text-center">Wiek</th>
             <th class="text-center">Klub</th>
-            <th class="text-center">Opłata Startowa</th>
+            {#<th class="text-center">Opłata Startowa</th>th#}
         </tr>
         </thead>
         <tbody>
         {% for signUp in signUpTournament %}
             <tr>
                 <td><a href="{{ path('user_show', {'id': signUp.User.id }) }}"> {{ signUp.User.surname }} {{ signUp.User.name }}</a></td>
+                <td class="text-center"> {{ signUp.discipline }} </td>
                 <td class="text-center"> {{ signUp.User.male ?  'M' : 'K' }} </td>
                 <td class="text-center"> {{ signUp.formula }} </td>
                 <td class="text-center"> {{ signUp.weight }} </td>
@@ -20,7 +22,7 @@
                 <td class="text-center"> {% if signUp.User.club %}
                     <a href="{{ path('club_show', {'id': signUp.User.club.id }) }}"> {{ signUp.User.getClub() }}</a></td>
                 {% endif %}
-                <td class="text-center"> {{ signUp.isPaid ? '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>' }} </td>
+                {#<td class="text-center"> {{ signUp.isPaid ? '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>' }} </td>#}
             </tr>
         {% endfor %}
         </tbody>

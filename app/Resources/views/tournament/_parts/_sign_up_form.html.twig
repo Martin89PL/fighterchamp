@@ -7,18 +7,18 @@ Klasy zawodników wg. stopnia zaawansowania:<br>
 </ul>
 <div class="col-md-6">
     {{ form_start(form) }}
+    {{ form_row(form.discipline,{ 'label' : 'Dyscyplina', 'placeholder' : 'Wybierz dyscypline'} ) }}
     {{ form_row(form.formula,{ 'label' : 'Klasa', 'placeholder' : 'Wybierz klasę'} ) }}
     {{ form_row(form.weight, { 'label': 'Kategoria wagowa', 'placeholder':'Wybierz kategorie wagową' }) }}
     {{ form_row(form.trainingTime, {
         'label': 'Staż treningowy (opcjonalnie) - liczba miesięcy',
         'attr': {'min': 0, 'max' : 99 }}) }}
-    {{ form_row(form.isLicence, {
-        'label': 'Posiadam ważną licencję PZB'
-    }) }}
+    {#{{ form_row(form.isLicence, {#}
+        {#'label': 'Posiadam ważną licencję PZB'#}
+    {#}) }}#}
 </div>
 <div class="col-md-6" id="yt-video"></div>
 <div class="col-md-6">
-
     {#{{ form_row(form.youtubeId,{ 'label' : 'Muzyka wejścia zawodnika na ring - Podaj link do utworu z Youtube',#}
         {#'placeholder' : 'Podaj link do utworu z Youtube',#}
         {#'id': 'youtubeId'#}

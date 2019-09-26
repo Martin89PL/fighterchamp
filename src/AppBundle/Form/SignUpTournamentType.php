@@ -29,10 +29,17 @@ class SignUpTournamentType extends AbstractType
             ->add('weight', ChoiceType::class, [
                 'choices'  => $trait
                 ])
-            ->add('isLicence', CheckboxType::class)
+            ->add('discipline', ChoiceType::class, [
+                'choices'  => [
+                    'BJJ' => 'BJJ',
+                    'Boks' => 'Boks',
+                    'MMA' => 'MMA',
+                    'Karate' => 'Karate',
+                    'K1 ProAm' => 'K1 ProAm'
+                ]])
+//            ->add('isLicence', CheckboxType::class)
 //            ->add('youtubeId', TextType::class)
 //            ->add('musicArtistAndTitle', TextType::class)
-
            ;
     }
 

@@ -31,12 +31,12 @@
                         <h3 class="text-uppercase text-center">miejsce</h3>
                         <div class="row">
                             <div class="building col-xs-6 text-right">
-                                <p><strong>{{ tournament.place.name }}</strong></p>
+                                <p><strong>{{ tournament.place ? tournament.place.name }}</strong></p>
                             </div>
                             <div class="address col-xs-6">
-                                <p>{{ tournament.place.city }}
+                                <p>{{ tournament.place ? tournament.place.city }}
                                     <br>
-                                    {{ tournament.place.street }}
+                                    {{ tournament.place ? tournament.place.street }}
                                 </p>
                             </div>
                         </div>

@@ -21,12 +21,13 @@
         <thead>
             <th>Nazwisko i Imię</th>
             <th class="text-center">Rekord</th>
+            <th class="text-center">Dyscyplina</th>
             <th class="text-center">Płeć</th>
             <th class="text-center">Klasa</th>
             <th class="text-center">Kat. Wagowa</th>
             <th class="text-center">Wiek</th>
-            <th class="text-center">Licencja PZB</th>
-            <th class="text-center">Opłata Startowa</th>
+            {#<th class="text-center">Licencja PZB</th>#}
+            {#<th class="text-center">Opłata Startowa</th>#}
             <th class="text-center">Klub</th>
             {#<th class="text-center">Muzyka Wejścia</th>#}
         </tr>
@@ -38,12 +39,13 @@
                 <td>
                     {{ macro.record(signUp.user) }}
                 </td>
+                <td class="text-center"> {{ signUp.discipline }} </td>
                 <td class="text-center"> {{ signUp.user.male ?  'M' : 'K' }} </td>
                 <td class="text-center"> {{ signUp.formula }} </td>
                 <td class="text-center"> {{ signUp.weight }} </td>
                 <td class="text-center"> {{ signUp.user.birthDay |getAge }} </td>
                 <td class="text-center"> {{ signUp.isLicence ? '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>' }} </td>
-                <td class="text-center"> {{ signUp.isPaid ? '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>' }} </td>
+                {#<td class="text-center"> {{ signUp.isPaid ? '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>' }} </td>#}
                 <td class="text-center"> {% if signUp.user.club %}
                 <a href="{{ signUp.user.club.href }}"> {{ signUp.user.club.name }}</a></td>
                 {% endif %}

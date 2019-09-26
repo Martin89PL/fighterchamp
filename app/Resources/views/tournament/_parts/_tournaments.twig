@@ -19,9 +19,9 @@
             <td>{{ tournament.discipline }}</td>
             <td>{{ tournament.getSignUpTournament| length }} / {{ tournament.capacity }}</td>
             <td>{{ tournament.start|date('d-m-Y') }}</td>
-            <td>{{ tournament.place.city }}</td>
-            <td>{{ tournament.place.name }}</td>
-            <td>{{ tournament.place.street }}</td>
+            <td>{{ tournament.place ? tournament.place.city }}</td>
+            <td>{{ tournament.place ? tournament.place.name }}</td>
+            <td>{{ tournament.place ? tournament.place.street }}</td>
         </tr>
     {% endfor %}
     </tbody>

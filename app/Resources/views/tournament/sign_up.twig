@@ -80,12 +80,12 @@
                         {% endif %}
 
 
-                        {% if not isUserRegister.isPaid %}
-                            <br>
-                            <p>
-                                <small>{{ include(template_from_string(tournament.paymentInfo)) }}</small>
-                            </p>
-                        {% endif %}
+                        {#{% if not isUserRegister.isPaid %}#}
+                            {#<br>#}
+                            {#<p>#}
+                                {#<small>{{ include(template_from_string(tournament.paymentInfo)) }}</small>#}
+                            {#</p>#}
+                        {#{% endif %}#}
 
                     {% elseif not isUserRegister %}
 

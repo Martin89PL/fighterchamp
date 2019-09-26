@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
+//todo REFACTOR
 /**
  * Ruleset
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RulesetRepository")
@@ -150,7 +151,21 @@ class Ruleset
         $this->id = $id;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getKadet()
+    {
+        return $this->kadet;
+    }
 
+    /**
+     * @param mixed $kadet
+     */
+    public function setKadet($kadet): void
+    {
+        $this->kadet = $kadet;
+    }
 
 }
 

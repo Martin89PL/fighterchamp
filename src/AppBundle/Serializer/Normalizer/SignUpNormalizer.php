@@ -43,6 +43,7 @@ class SignUpNormalizer implements NormalizerInterface
             'weighted' => $object->getWeighted(),
             'trainingTime' => $object->getTrainingTime(),
             'isLicence' => $object->getIsLicence(),
+            'discipline' => $object->getDiscipline(),
             'user'=> [
                 'href' => $this->router->generate('user_show', ['id' => $object->getUser()->getId()]),
                 'name' => $object->getUser()->getName(),

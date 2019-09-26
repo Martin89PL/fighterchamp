@@ -105,6 +105,13 @@ class SignUpTournament
      */
     private $musicArtistAndTitle = '';
 
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $discipline;
+
     public function getIsLicence()
     {
         return $this->isLicence;
@@ -264,5 +271,15 @@ class SignUpTournament
     public function setDeleteByAdmin(?\DateTime $dateTime): void
     {
         $this->deletedAtByAdmin = $dateTime;
+    }
+
+    public function getDiscipline(): ?string
+    {
+        return $this->discipline;
+    }
+
+    public function setDiscipline(string $discipline): void
+    {
+        $this->discipline = $discipline;
     }
 }
