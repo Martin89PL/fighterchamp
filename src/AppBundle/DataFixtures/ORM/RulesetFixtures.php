@@ -2,11 +2,11 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-use AppBundle\DataFixtures\BaseFixture;
 use AppBundle\Entity\Ruleset;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
-class RulesetFixtures extends BaseFixture
+class RulesetFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {

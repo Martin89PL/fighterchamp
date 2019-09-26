@@ -7,6 +7,7 @@ use AppBundle\Entity\Club;
 use AppBundle\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Tests\Helper\DateFactory;
 
 class UserFixtures extends BaseFixture implements DependentFixtureInterface
 {
@@ -19,6 +20,7 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
         $user->setSurname('admin');
         $user->setMale(true);
         $user->setRoles(['ROLE_ADMIN']);
+        $user->setBirthDay(DateFactory::createRandomDate());
         $user->setPlainPassword('password');
 
         $manager->persist($user);
@@ -30,6 +32,9 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
             $user->setName($this->faker->firstName);
             $user->setSurname($this->faker->lastName);
             $user->setMale($this->faker->boolean());
+            $user->setPesel('95041847226');
+            $user->setBirthDay(DateFactory::createRandomDate());
+            $user->setPlainPassword('password');
             $user->setClub($this->getReference(Club::class . '_' . rand(1,2)));
             $manager->persist($user);
 
@@ -45,6 +50,4 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
           ClubFixtures::class
         ];
     }
-
-
 }
