@@ -65,10 +65,12 @@ class FightServiceIntegrationTest extends TestCase
     {
         $user1 = $this->userBuilder
             ->withName('user1')
+            ->withEmail('user1@mail.com')
             ->build();
 
         $user2 = $this->userBuilder
             ->withName('user2')
+            ->withEmail('user2@mail.com')
             ->build();
 
         $tournament = $this->tournamentBuilder

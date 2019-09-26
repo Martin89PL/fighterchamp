@@ -45,11 +45,13 @@ class UserCoachTest extends KernelTestCase
     {
         $fighter = $this->userBuilder
             ->withName('Fighter')
+            ->withEmail('fighter@mail.com')
             ->build();
 
         $coach = $this->userBuilder
             ->withType(User::TYPE_COACH)
             ->withName('Coach')
+            ->withEmail('coach@mail.com')
             ->build();
 
         $this->em->persist($fighter);

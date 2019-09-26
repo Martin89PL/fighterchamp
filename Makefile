@@ -30,12 +30,16 @@ db-load-fixtures:
 
 test:
 	${COMPOSE_EXEC_PHP} vendor/bin/phpunit
+	${COMPOSE_EXEC_PHP} vendor/bin/behat
+
+unit:
+	${COMPOSE_EXEC_PHP} vendor/bin/phpunit
+
+unit-fail-fast:
+	${COMPOSE_EXEC_PHP} vendor/bin/phpunit --stop-on-failure
 
 behat:
 	${COMPOSE_EXEC_PHP} vendor/bin/behat
-
-test-fail-fast:
-	${COMPOSE_EXEC_PHP} vendor/bin/phpunit --stop-on-failure
 
 setup-keys:
 	mkdir -p var/jwt
