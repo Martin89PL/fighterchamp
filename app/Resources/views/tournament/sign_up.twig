@@ -1,10 +1,14 @@
 {% extends 'base.html.twig' %}
 {% import '_macros/macro.html.twig' as macro %}
-{% set signUpOpen = "now"|date('Y-m-d') <= tournament.signUpTill|date('Y-m-d') and tournament.signUpStart <= "now"|date('Y-m-d') %}
+{% set signUpOpen = "now"|date('Y-m-d') <= tournament.signUpTill|date('Y-m-d') and tournament.signUpStart|date('Y-m-d') <= "now"|date('Y-m-d') %}
 {% set isAvailableSeats = signUpTournament|length < tournament.capacity %}
 {% set isTournamentEnded = tournament.end|date('Y-m-d') < "now"|date('Y-m-d') %}
 
+
 {% block body %}
+
+    {{ dump(signUpOpen) }}
+
     {% include 'tournament/_parts/_panel.twig' %}
 
 <div class="main">
