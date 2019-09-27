@@ -43,6 +43,7 @@ final class Database
     public function execute(string $query)
     {
         $this->mysqli->multi_query($query);
-        while ($this->mysqli->next_result()) {;}
+        while ($this->mysqli->more_results() && $this->mysqli->next_result()) {;}
     }
+
 }
