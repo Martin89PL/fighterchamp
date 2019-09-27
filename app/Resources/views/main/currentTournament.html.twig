@@ -2,6 +2,7 @@
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         {% if tournament is not empty %}
             <h1 class="text-center">{{ tournament.name }}</h1>
+            <p class="text-center" id="demo"></p>
         {% endif %}
 
         {#<h4 class="text-center">{{ tournament.start | date('d-m-Y') }} {{ tournament.start |localizeddate('none', 'full', app.request.locale, null, 'cccc') }} </h4>#}
