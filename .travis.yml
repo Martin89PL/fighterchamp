@@ -12,3 +12,10 @@ matrix:
   fast_finish: true
   include:
     - php: 7.3
+install:
+  - make docker-build
+  - make composer-install
+script:
+  - make test
+
+
