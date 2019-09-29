@@ -58,7 +58,7 @@ class FacebookAuthenticator extends SocialAuthenticator
             return $facebook->getUser();
         }
 
-        if(!$facebook->getUser()->getEmail()){
+        if(!$facebookUser->getEmail()){
             return NULL;
         }
 
