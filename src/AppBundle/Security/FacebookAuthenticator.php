@@ -51,15 +51,17 @@ class FacebookAuthenticator extends SocialAuthenticator
     {
         /** @var FacebookUser $facebookUser */
         $facebookUser = $this->getFacebookClient()->fetchUserFromToken($credentials);
-
-        $facebookId = $facebookUser->getId();
-
         $facebook = $this->em->getRepository(Facebook::class)
-                    ->findOneBy(['facebookId' => $facebookId]);
+                    ->findOneBy(['facebookId' => $facebookUser->getId()]);
 
-        $user = $facebook ? $facebook->getUser() : null;
+        if($facebook){
+            return $facebook->getUser();
+        }
 
-        if(!$user){
+        if(!$facebook->getUser()->getEmail()){
+            return NULL;
+        }
+
             $facebook = new Facebook(
                     $facebookUser->getId(),
                     $facebookUser->getFirstName(),
@@ -88,7 +90,7 @@ class FacebookAuthenticator extends SocialAuthenticator
 
 
             $this->em->flush();
-        }
+
 
         return $user;
     }
