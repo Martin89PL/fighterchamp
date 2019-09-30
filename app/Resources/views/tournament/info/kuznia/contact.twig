@@ -1,0 +1,11 @@
+<address class="text-center col-xs-12">
+   <span> Paweł Deluga </span> ​<br>
+    <i class="fa fa-phone"></i> 509 078 113 <br/>
+     paweldeluga@o2.pl <br/>
+    {% if tournament.facebookEvent %}
+        <a href="https://web.facebook.com/events/{{ tournament.facebookEvent }}">
+        Strona wydarzenia na Facebooku</a><br/>
+    {% endif %}
+    {{ tournament.place.city }}, ul. {{ tournament.place.street }}, {{ tournament.place.name }}
+
+</address>

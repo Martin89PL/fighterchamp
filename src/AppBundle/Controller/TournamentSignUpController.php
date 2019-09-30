@@ -119,7 +119,7 @@ class TournamentSignUpController extends Controller
 
             $formDelete->handleRequest($request);
 
-            if ($form->isSubmitted() && $formDelete->isValid()) {
+            if ($formDelete->isSubmitted() && $formDelete->isValid()) {
 
                 //todo sometimes isUserRegister is null - error 500
                 $isUserRegister->delete();
