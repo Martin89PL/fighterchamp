@@ -90,7 +90,7 @@ class AdminTournamentFightController extends Controller
     /**
      * @Route("/turnieje/{id}/walki", name="admin_tournament_fights")
      */
-    public function listAction(Tournament $tournament, EntityManagerInterface $em)
+    public function listAction(Tournament $tournament, EntityManagerInterface $em, SerializerInterface $serializer)
     {
         $fights = $em->getRepository('AppBundle:Fight')
             ->findAllFightsForTournamentAdmin($tournament);
@@ -105,30 +105,14 @@ class AdminTournamentFightController extends Controller
             $signUps [] = $this->getDoctrine()->getRepository('AppBundle:SignUpTournament')->find($signUp['id']);
         }
 
-        $normalizeSignUps = $this->get('serializer.my')->normalize($signUps);
-
-        $fightsSort = $this->splitFightsBasedOnDay($fights);
+        $normalizeSignUps = $serializer->normalize($signUps);
 
         return $this->render('admin/fight.html.twig', [
-            'fights' => $fightsSort,
+            'fights' => $fights,
             'tournament' => $tournament,
             'signUps' => $normalizeSignUps
         ]);
     }
-
-    public function splitFightsBasedOnDay(array $fights)
-    {
-        $result = [];
-        foreach ($fights as $fight)
-        {
-            $current = $fight->getDay();
-
-            $result[$current->format('Y-m-d')][] = $fight;
-        }
-
-        return array_values($result);
-    }
-
 
     /**
      * @Route("/turnieje/{id}/parowanie", name="admin_tournament_pair")

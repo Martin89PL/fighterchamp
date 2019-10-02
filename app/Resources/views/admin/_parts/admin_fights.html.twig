@@ -9,7 +9,8 @@
     <tr>
         <th></th>
         <th>Opublikowane?</th>
-        <th>Dzień</th>
+{#        <th>Dzień</th>#}
+        <th>Dyscyplina</th>
         <th>Kolejność</th>
         <th>
             Zawodnik 1 <br>
@@ -23,7 +24,7 @@
         <th>Wygrany</th>
         <th>Klasa</th>
         <th>Kat. wagowa</th>
-        <th>Licencja PZB</th>
+{#        <th>Licencja PZB</th>#}
     </tr>
     </thead>
     <tbody>
@@ -39,11 +40,15 @@
             <td>
                 <input class="checkbox_ready" type="checkbox" {{ fight.isVisible? 'checked' : '' }} value="{{ fight.id }}">
             </td>
+{#            <td>#}
+{#                <select class="select_day">#}
+{#                    <option value="{{ fight.id }}|sob." {{ fightDayString == 'sob.'? 'selected' }} >Sobota</option>#}
+{#                    <option value="{{ fight.id }}|niedz." {{ fightDayString == 'niedz.'? 'selected' }} >Niedziela</option>#}
+{#                </select>#}
+{#            </td>#}
             <td>
-                <select class="select_day">
-                    <option value="{{ fight.id }}|sob." {{ fightDayString == 'sob.'? 'selected' }} >Sobota</option>
-                    <option value="{{ fight.id }}|niedz." {{ fightDayString == 'niedz.'? 'selected' }} >Niedziela</option>
-                </select></td>
+{#                {{  }}#}
+            </td>
             <td><select class="select_order" id="{{ loop.index }}" autocomplete="off">
                     {% for i in 1..fights|length %}
                         <option value="{{ i }}|{{ fight.id }}" {{ fight.position == loop.index ? 'selected' }} >{{ i }}</option>
@@ -124,17 +129,17 @@
 
             <td>{{ fight.formula }}</td>
             <td>{{ fight.weight }}</td>
-            <td>
-                <select autocomplete="off" class="select_is_licence">
-                    {% if fight.isLicence %}
-                        <option selected value="{{ fight.id }}|1">Tak</option>
-                        <option value="{{ fight.id }}|0">Nie</option>
-                    {% else %}
-                        <option value="{{ fight.id }}|1">Tak</option>
-                        <option selected value="{{ fight.id }}|0">Nie</option>
-                    {% endif %}
-                </select>
-            </td>
+{#            <td>#}
+{#                <select autocomplete="off" class="select_is_licence">#}
+{#                    {% if fight.isLicence %}#}
+{#                        <option selected value="{{ fight.id }}|1">Tak</option>#}
+{#                        <option value="{{ fight.id }}|0">Nie</option>#}
+{#                    {% else %}#}
+{#                        <option value="{{ fight.id }}|1">Tak</option>#}
+{#                        <option selected value="{{ fight.id }}|0">Nie</option>#}
+{#                    {% endif %}#}
+{#                </select>#}
+{#            </td>#}
         </tr>
     {% endfor %}
 

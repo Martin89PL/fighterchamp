@@ -9,7 +9,7 @@
             </div>
         {% endfor %}
 
-           <a style="color: white" href="{{ path('admin_create_signUp', {id: tournament.id}) }}">
+      {#     <a style="color: white" href="{{ path('admin_create_signUp', {id: tournament.id}) }}">
                <button class="btn btn-danger"> Dodaj Zgłoszenie Zawodnika </button>
            </a>
 
@@ -21,37 +21,42 @@
         <span>Juniorzy: {{ finance.juniorsPaid }} / </span> {{ finance.juniors }} <br>
         {{ finance.juniorsPaid * tournament.ticketFighterChild.price  }} zł / {{ finance.juniors * tournament.ticketFighterChild.price }} zł<br>
 
-        <span>Suma: {{ finance.seniors * tournament.ticketFighterAdult.price  + finance.juniors * tournament.ticketFighterChild.price}} zł </span>
+        <span>Suma: {{ finance.seniors * tournament.ticketFighterAdult.price  + finance.juniors * tournament.ticketFighterChild.price}} zł </span>#}
         <h3>Zważono {{ howManyWeighted }} na {{ signUpsTournament|length }} zawodników</h3>
         <table id="table" class="table table-striped">
             <thead>
             <tr>
-                <th>Zapłacone?</th>
+{#                <th>Zapłacone?</th>#}
                 <th>Nazwisko i Imię</th>
+                <th>Dyscyplina</th>
                 <th class="text-center">Kat. Wagowa w Zgłoszeniu</th>
                 <th class="text-center">Kat. Wagowa w Turnieju</th>
                 <th>Klasa</th>
                 <th>Staż [miesiące]</th>
                 <th>Płeć</th>
                 <th>Wiek</th>
+                <th>Kontakt</th>
             </tr>
             </thead>
             <tbody>
             {% for signUp in signUpsTournament %}
                 <tr>
-                    <td>
-                        <select autocomplete="off" class="select_isPaid">
-                            {% if signUp.isPaid %}
-                                <option selected value="{{ signUp.id }}|1">Tak</option>
-                                <option value="{{ signUp.id }}|0">Nie</option>
-                            {% else %}
-                                <option value="{{ signUp.id }}|1">Tak</option>
-                                <option selected value="{{ signUp.id }}|0">Nie</option>
-                            {% endif %}
-                        </select>
-                    </td>
+{#                    <td>#}
+{#                        <select autocomplete="off" class="select_isPaid">#}
+{#                            {% if signUp.isPaid %}#}
+{#                                <option selected value="{{ signUp.id }}|1">Tak</option>#}
+{#                                <option value="{{ signUp.id }}|0">Nie</option>#}
+{#                            {% else %}#}
+{#                                <option value="{{ signUp.id }}|1">Tak</option>#}
+{#                                <option selected value="{{ signUp.id }}|0">Nie</option>#}
+{#                            {% endif %}#}
+{#                        </select>#}
+{#                    </td>#}
                     <td><a href="{{ path('user_show', {'id': signUp.User.id }) }}">
                             {{ signUp.User.surname }} {{ signUp.User.name }}</a></td>
+                    <td>
+                        {{ signUp.discipline }}
+                    </td>
                     <td> {{ signUp.weight }} </td>
                     <td>
 
@@ -74,6 +79,15 @@
                     <td> {{ signUp.trainingTime }}</td>
                     <td> {{ signUp.User.male ?  'M' : 'K' }} </td>
                     <td> {{ signUp.User.birthDay |getAge }} </td>
+                    <td>
+                        {% if signUp.User.phone %}
+                            <span data-div="{{ loop.index }}"
+                                  class="expand">Pokaż</span>
+                            <div style="display: none" id="{{ loop.index }}">{{ signUp.User.phone }}
+                                <br> {{ signUp.User.email }}
+                            </div>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -97,6 +111,16 @@
 
     <script src="{{ asset('js/admin_select_tournament.js') }}"></script>
     <script>
+        window.onload=function() {
+            var links = document.querySelectorAll(".expand");
+            for (var i=0;i<links.length;i++) {
+                links[i].onclick=function(e) {
+                    e.preventDefault();
+                    var ele = document.getElementById(this.getAttribute("data-div"));
+                    if (ele) ele.style.display = ele.style.display == "block"?"none":"block";
+                }
+            }
+        }
 
         $(".select_isPaid").change(function () {
             var values = this.value;

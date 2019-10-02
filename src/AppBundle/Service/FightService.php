@@ -63,4 +63,17 @@ class FightService
     {
         return ($signUp0->getWeight() >= $signUp1->getWeight()) ? $signUp0->getWeight() : $signUp1->getWeight();
     }
+
+    public function splitFightsBasedOnDay(array $fights): array
+    {
+        $result = [];
+        foreach ($fights as $fight)
+        {
+            $current = $fight->getDay();
+
+            $result[$current->format('Y-m-d')][] = $fight;
+        }
+
+        return array_values($result);
+    }
 }

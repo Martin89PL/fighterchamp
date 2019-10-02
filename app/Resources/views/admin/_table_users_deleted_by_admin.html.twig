@@ -3,7 +3,8 @@
     <thead>
     <tr>
         <th></th>
-        <th>Zapłacone?</th>
+{#        <th>Zapłacone?</th>#}
+        <th>Dyscyplina</th>
         <th>Zważony?</th>
         <th>Nazwisko i Imię</th>
         <th>Rekord</th>
@@ -23,7 +24,8 @@
                     <a href="{{ path("admin_tournament_toggle_delete_by_admin", {'id' : signUp.id }) }}"
                        class="btn btn-success"><i class="fa fa-repeat fa-lg"></i> Przywróć</a>
                 </td>
-                <td> {{ signUp.isPaid ? 'Tak' : 'Nie' }} </td>
+{#                <td> {{ signUp.isPaid ? 'Tak' : 'Nie' }} </td>#}
+                <td> {{ signUp.discipline }} </td>
                 <td> {{ signUp.weighted ? 'Tak' : 'Nie' }} </td>
                 <td><a href="{{ signUp.user.href }}"> {{ signUp.user.surname }} {{ signUp.user.name }}</a></td>
                 <td>

@@ -1,11 +1,10 @@
+{% set tournamentAdmin = app.user.tournamentAdmin|first %}
 <div>
     <ul class="nav navbar-nav">
-        <li><a href="{{ path('admin_user_list') }}">Zawodnicy</a></li>
-        <li><a href="{{ path('admin_tournament_sign_up', { 'id' : tournament.id}) }}"> Zgłoszenia</a></li>
-        <li><a href="{{ path('admin_tournament_pair', { 'id' : tournament.id}) }}"> Parowanie</a></li>
-        <li><a href="{{ path('admin_tournament_fights', { 'id' : tournament.id}) }}"> Walki - Wygrał / Przegrał</a></li>
+        <li><a href="{{ path('admin_tournament_sign_up', { 'id' : tournamentAdmin.tournament.id}) }}"> Zgłoszenia</a></li>
+        <li><a href="{{ path('admin_tournament_pair', { 'id' : tournamentAdmin.tournament.id}) }}"> Parowanie</a></li>
+        <li><a href="{{ path('admin_tournament_fights', { 'id' : tournamentAdmin.tournament.id}) }}"> Walki - Wygrał / Przegrał</a></li>
         {#<li><a href="{{ path('admin_mail') }}">Mail</a></li>#}
-        <li><a href="#">Filmy</a></li>
         {#<li ><a href="{{ path('admin_tournament_create') }}">Utwórz nowy turniej</a></li>#}
     </ul>
     {#<ul class="nav navbar-nav" style="float: right;  padding-right:30px;">#}
