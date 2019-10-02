@@ -44,7 +44,7 @@
                 <td class="text-center"> {{ signUp.formula }} </td>
                 <td class="text-center"> {{ signUp.weight }} </td>
                 <td class="text-center"> {{ signUp.user.birthDay |getAge }} </td>
-                <td class="text-center"> {{ signUp.isLicence ? '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>' }} </td>
+{#                <td class="text-center"> {{ signUp.isLicence ? '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>' }} </td>#}
                 {#<td class="text-center"> {{ signUp.isPaid ? '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>' }} </td>#}
                 <td class="text-center"> {% if signUp.user.club %}
                 <a href="{{ signUp.user.club.href }}"> {{ signUp.user.club.name }}</a></td>
