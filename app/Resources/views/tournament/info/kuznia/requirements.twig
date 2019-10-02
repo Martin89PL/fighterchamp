@@ -1,0 +1,35 @@
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Pełnoletni</th>
+        <th>Niepełnoletni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>badania</td>
+        <td>zaświadczenie lekarskie (może być od lekarza pierwszego kontaktu),
+            że nie ma przeciwskazań do uprawiania dyscypliny jaką jest boks
+            albo badania sportowo - lekarskie</td>
+        <td>badania sportowo - lekarskie</td>
+    </tr>
+    <tr>
+        <td>oświadczenie</td>
+        <td> wkrótce do ściągnięcia ze strony
+{#            <a href="{{ asset('documents/oświadczenie-Granda-kobiety.docx') }}">#}
+{#                wersja dla kobiet</a> albo <a href="{{ asset('documents/oświadczenie-Granda.docx') }}">#}
+{#                wersja dla mężczyzn</a>#}
+        </td>
+        <td> wkrótce do ściągnięcia ze strony
+{#            <a href="{{ asset('documents/oświadczenie-Granda-dziecko.docx') }}">#}
+{#                oświadczenie podpisane przez prawnego opiekuna</a>#}
+        </td>
+    </tr>
+    <tr>
+        <td>wpisowe</td>
+        <td> {{ (tournament.ticketFighterAdult ? tournament.ticketFighterAdult.price)|raw }} 0 zł</td>
+        <td> {{ tournament.ticketFighterChild ? tournament.ticketFighterChild.price }} 0 zł</td>
+    </tr>
+    </tbody>
+</table>
