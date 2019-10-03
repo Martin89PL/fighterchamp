@@ -88,14 +88,12 @@
                             {#</p>#}
                         {#{% endif %}#}
 
-                    {% elseif not isUserRegister %}
-
                         {% if signUpOpen and isAvailableSeats %}
 
                             {% include 'tournament/_parts/show_sing_up_form_if_inssurance_data_ELSE_link_to_profile.html.twig' %}
 
                         {% endif %}
-
+                        
                     {% endif %}
 
                 {% endif %}
