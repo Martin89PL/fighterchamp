@@ -18,6 +18,7 @@
     <script>
       $(document).ready(function () {
 
+          {%  if tournament %}
           // Set the date we're counting down to
           var countDownDate = new Date("{{ tournament.start|date('Y-m-d') }}").getTime();
 
@@ -46,7 +47,7 @@
                   document.getElementById("demo").innerHTML = "EXPIRED";
               }
           }, 1000);
-
+          {% endif %}
 	  
             var t = $('#table-fights').DataTable({
                 "ajax": "{{ path('api_tournament_fight_list', {id: tournamentId}) }}",

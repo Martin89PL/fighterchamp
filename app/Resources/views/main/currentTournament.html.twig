@@ -7,27 +7,6 @@
            <p class="text-center"><a style="font-size: 30px" href="{{ path('tournament_sign_up', { id : tournament.id}) }}">ZAPISY</a></p>
         {% endif %}
 
-
-
-        {#<h4 class="text-center">{{ tournament.start | date('d-m-Y') }} {{ tournament.start |localizeddate('none', 'full', app.request.locale, null, 'cccc') }} </h4>#}
-
-        {#<div class="row">#}
-            {#<div class="col-xs-10 col-md-8 col-md-offset-2">#}
-                {#<h2 class="text-uppercase">harmonogram</h2>#}
-                {#{% set last = '' %}#}
-                {#{% for schedule in tournament.schedule %}#}
-
-                    {#{% if last != schedule.start | date('d-m-Y') %}#}
-                        {#<h4>{{ schedule.start |localizeddate('none', 'full', app.request.locale, null, 'cccc') }}#}
-                            {#({{ schedule.start | date('d-m-Y') }})</h4>#}
-                    {#{% endif %}#}
-
-                    {#<p><strong>{{ schedule.start| date('H:i') }}</strong>-{{ schedule.end| date('H:i') }}#}
-                        {#- {{ schedule.description }}</p>#}
-                    {#{% set last = schedule.start | date('d-m-Y') %}#}
-                {#{% endfor %}#}
-            {#</div>#}
-        {#</div>#}
         {% if tournament is not empty and tournament.fightsReady is not empty %}
             <table id="table-fights" class="table">
                 <thead>
@@ -51,15 +30,17 @@
 
         {% endif %}
 
+        {% if tournament %}
         <div class="embed-responsive embed-responsive-16by9">
         <iframe class="embed-responsive-item" src="//www.youtube.com/embed/jJtTTpD4alo"
         allowfullscreen></iframe>
         </div>
         <br>
         <br>
+        {% endif %}
 
         <div class="col-xs-12 col-md-8 col-md-offset-2">
-            {% if tournament is not empty %}
+            {% if tournament %}
                 <img class="img-responsive" src="{{ tournament.poster }}">
             {% endif %}
         </div>
