@@ -85,16 +85,18 @@
                                 {#<small>{{ include(template_from_string(tournament.paymentInfo)) }}</small>#}
                             {#</p>#}
                         {#{% endif %}#}
-
-                        {% if signUpOpen and tournament.isAvailableSeats %}
-
-                            {% include 'tournament/_parts/show_sing_up_form_if_inssurance_data_ELSE_link_to_profile.html.twig' %}
-
-                        {% endif %}
                         
                     {% endif %}
 
+                    {% if signUpOpen and tournament.isAvailableSeats %}
+
+                        {% include 'tournament/_parts/show_sing_up_form_if_inssurance_data_ELSE_link_to_profile.html.twig' %}
+
+                    {% endif %}
+
                 {% endif %}
+
+                <p class="text-center"> Liczba zapisanych: {{ tournament.getSignUpTournament| length }} / {{ tournament.capacity }}</p>
 
                 <div class="col-xs-12">
                     <table id="table-signups" class="table table-striped">
