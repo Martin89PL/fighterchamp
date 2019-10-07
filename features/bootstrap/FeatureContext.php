@@ -1,5 +1,6 @@
 <?php
 
+use AppBundle\Entity\Tournament;
 use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
@@ -9,8 +10,11 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Tests\Builder\RulesetBuilder;
+use Tests\Builder\SignupTournamentBuilder;
 use Tests\Builder\TournamentBuilder;
 use Tests\Builder\UserBuilder;
+use Tests\Database;
+use Tests\DatabaseHelper;
 
 require_once __DIR__ . '/../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
@@ -35,9 +39,19 @@ class FeatureContext extends RawMinkContext implements Context
     private $tournamentBuilder;
 
     /**
+     * @var SignupTournamentBuilder
+     */
+    private $signupTournamentBuilder;
+
+    /**
      * @var RulesetBuilder
      */
     private $rulesetBuilder;
+
+    /**
+     * @var DatabaseHelper
+     */
+    private $databaseHelper;
 
     public function __construct()
     {
@@ -46,7 +60,9 @@ class FeatureContext extends RawMinkContext implements Context
         $this->em = $kernel->getContainer()->get('doctrine')->getManager();
         $this->userBuilder = new UserBuilder();
         $this->tournamentBuilder = new TournamentBuilder();
+        $this->signupTournamentBuilder = new SignupTournamentBuilder();
         $this->rulesetBuilder = new RulesetBuilder();
+        $this->databaseHelper = new DatabaseHelper(new Database());
     }
 
     /**
@@ -54,10 +70,8 @@ class FeatureContext extends RawMinkContext implements Context
      */
     public function clearData()
     {
-        $purger = new ORMPurger($this->em);
-        $purger->purge();
+        $this->databaseHelper->truncateAllTables();
     }
-
 
     /**
      * @Then /^I wait for result$/
@@ -88,9 +102,21 @@ class FeatureContext extends RawMinkContext implements Context
 
         $this->em->persist($user);
         $this->em->flush();
-
     }
-    
+
+    /**
+     * @Given /^there is a user "([^"]*)"$/
+     */
+    public function thereIsAUser($arg1)
+    {
+        $user = $this->userBuilder
+            ->withName('user')
+            ->build();
+
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+
     /**
      * Pauses the scenario until the user presses a key. Useful when debugging a scenario.
      *
@@ -148,4 +174,23 @@ class FeatureContext extends RawMinkContext implements Context
         $this->getSession()->getPage()->pressButton('Login');
     }
 
+    /**
+     * @Given /^"([^"]*)" have signup for "([^"]*)"$/
+     */
+    public function haveSignupFor($userName, $tournamentName)
+    {
+        $user = $this->em->getRepository(User::class)
+            ->findOneBy(['name' => $userName]);
+
+        $tournament = $this->em->getRepository(Tournament::class)
+            ->findOneBy(['name' => $tournamentName]);
+
+        $signup = $this->signupTournamentBuilder
+            ->withUser($user)
+            ->withTournament($tournament)
+            ->build();
+
+        $this->em->persist($signup);
+        $this->em->flush();
+    }
 }

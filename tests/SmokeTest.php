@@ -104,7 +104,12 @@ class SmokeTest extends HttpSmokeTestCase
                 $requireId = [
                     'admin_tournament_fights',
                     'fight_show',
-                    'api_user_show'
+                    'api_user_show',
+                    'admin_tournament_pair',
+                    'admin_tournament_sign_up',
+                    'admin_create_signUp'
+
+
                 ];
 
                 $requireType = [
@@ -130,7 +135,7 @@ class SmokeTest extends HttpSmokeTestCase
                         ->setParameter('id', 1);
 
 
-
+                if(in_array($info->getRouteName(), $requireId)) $config->skipRoute();
                 if(in_array($info->getRouteName(), $skipRoutes)) $config->skipRoute();
                 if(in_array($info->getRouteName(), $postRoute)) $config->skipRoute();
             });

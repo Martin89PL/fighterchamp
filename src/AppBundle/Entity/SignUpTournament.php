@@ -210,14 +210,6 @@ class SignUpTournament
         return $this->user;
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-    }
-
     public function getStazTreningowy()
     {
         if($this->getTrainingTime()){

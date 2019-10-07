@@ -13,6 +13,8 @@ class Builder
 
     public function __construct()
     {
-        $this->faker = Faker\Factory::create();
+        $faker = Faker\Factory::create();
+        $faker->seed(1);
+        $this->faker = $faker;
     }
 }

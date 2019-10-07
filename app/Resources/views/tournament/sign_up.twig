@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 {% import '_macros/macro.html.twig' as macro %}
 {% set signUpOpen = "now"|date('Y-m-d') <= tournament.signUpTill|date('Y-m-d') and tournament.signUpStart|date('Y-m-d') <= "now"|date('Y-m-d') %}
-{% set isAvailableSeats = signUpTournament|length < tournament.capacity %}
 {% set isTournamentEnded = tournament.end|date('Y-m-d') < "now"|date('Y-m-d') %}
 
 {% block body %}
     {% include 'tournament/_parts/_panel.twig' %}
+
 <div class="main">
     <div class="container">
         <div class="row">
@@ -31,14 +31,13 @@
                         {% endif %}
 
                     {% else %}
-                  dwa
                         <p class="text-center">
                             Zgłoszenia przyjmowane są od {{ macro.formatYMDdzienTygodnia(tournament.signUpStart) }}
                         </p>
                 {% endif %}
 
 
-                {% if not isAvailableSeats %}
+                {% if not tournament.isAvailableSeats %}
                     <p class="text-center">
                         <strong>Limit miejsc został wyczerpany</strong>
                     </p>
@@ -86,16 +85,35 @@
                                 {#<small>{{ include(template_from_string(tournament.paymentInfo)) }}</small>#}
                             {#</p>#}
                         {#{% endif %}#}
-                        
-                    {% endif %}
 
-                    {% if signUpOpen and isAvailableSeats %}
-                        {% include 'tournament/_parts/show_sing_up_form_if_inssurance_data_ELSE_link_to_profile.html.twig' %}
+                        {% if signUpOpen and tournament.isAvailableSeats %}
+
+                            {% include 'tournament/_parts/show_sing_up_form_if_inssurance_data_ELSE_link_to_profile.html.twig' %}
+
+                        {% endif %}
+                        
                     {% endif %}
 
                 {% endif %}
 
-                {% include 'tournament/_parts/_listaZapisanych.html.twig' %}
+                <div class="col-xs-12">
+                    <table id="table-signups" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nazwisko i Imię</th>
+                            <th class="text-center">Rekord</th>
+                            <th class="text-center">Dyscyplina</th>
+                            <th class="text-center">Płeć</th>
+                            <th class="text-center">Klasa</th>
+                            <th class="text-center">Kat. Wagowa</th>
+                            <th class="text-center">Wiek</th>
+                            <th class="text-center">Klub</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -105,7 +123,7 @@
     {% block javascripts %}
         {{ parent() }}
 
-        <script src="{{ asset('js/youtube.js') }}"></script>
+        <script src="{{ asset('js/fight_table.js') }}"></script>
 
         <script>
             $(document).ready(function () {
@@ -121,16 +139,63 @@
                 $("#edit_box").toggle();
             });
 
-            $(document).ready(function () {
-                var t = $('#table-signups').DataTable({
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Polish.json"
+            var t = $('#table-signups').DataTable({
+                "ajax": "{{ path('api_signup_list', {id: tournament.id}) }}",
+                "columns": [
+                    {data: null},
+                    {
+                        mData: function (data) {
+                            return "<a href='" + data.user.href + "'>" + data.user.surname + ' ' + data.user.name + '</a>';
+                        }
                     },
-                    "bPaginate": false,
-                    "dom": 'lifrtp',
-                    "order": [[2, "asc"], [3, "asc"], [4, "asc"], [5, "asc"]]
-                });
+                    {
+                        mData: function (data) {
+                            return record(data.user);
+                        }
+                    },
+                    {
+                        mData: function (data) {
+                            return data.discipline;
+                        }
+                    },
+                    {
+                        mData: function (data) {
+                            return data.user.male ? 'M' : 'K';
+                        }
+                    },
+                    {
+                        mData: function (data) {
+                            return data.formula;
+                        }
+                    },
+                    {
+                        mData: function (data) {
+                            return data.weight;
+                        }
+                    },
+                    {
+                        mData: function (data) {
+                            return age(data.user);
+                        }
+                    },
+                    {
+                        mData: function (data) {
+                            return club(data.user);
+                        }
+                    },
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Polish.json"
+                },
+                "bPaginate": false,
+                "dom": 'lifrtp'
             });
+
+            t.on('order.dt search.dt', function () {
+                t.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
 
 
         </script>

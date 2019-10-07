@@ -127,6 +127,11 @@ class Tournament
      */
     private $discipline;
 
+    public function isAvailableSeats(): bool
+    {
+        return $this->signUpTournament->count() < $this->capacity;
+    }
+
     public function getPaymentInfo(): string
     {
         return

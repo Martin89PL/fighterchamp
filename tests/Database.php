@@ -15,10 +15,10 @@ final class Database
 
     public function __construct()
     {
-            $dbServer = 'db_test';
+            $dbServer = 'db';
             $dbUser = 'test';
             $dbPass = 'test';
-            $dbName = 'db_test';
+            $dbName = 'test';
             $dbPort = 3306;
 
         $this->mysqli = new mysqli($dbServer, $dbUser, $dbPass, $dbName, $dbPort);
