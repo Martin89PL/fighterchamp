@@ -38,4 +38,10 @@ class SignUpController extends Controller
 
         return new Response();
     }
+
+    public function list(Tournament $tournament, EntityManagerInterface $entityManager)
+    {
+       return $entityManager->getRepository(SignUpTournament::class)
+            ->findOneBy(['tournament' => $tournament]);
+    }
 }
