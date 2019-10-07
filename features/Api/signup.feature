@@ -9,7 +9,7 @@ Feature: Signup
     Then the response should be
     """
   {
-  "data": {
+  "data": [{
     "id": 1,
     "formula": "boks",
     "weight": "100",
@@ -40,6 +40,7 @@ Feature: Signup
       "club": null
     }
   }
+  ]
 }
     """
 

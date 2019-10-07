@@ -42,6 +42,6 @@ class SignUpController extends Controller
     public function list(Tournament $tournament, EntityManagerInterface $entityManager)
     {
        return $entityManager->getRepository(SignUpTournament::class)
-            ->findOneBy(['tournament' => $tournament]);
+            ->findBy(['tournament' => $tournament]);
     }
 }

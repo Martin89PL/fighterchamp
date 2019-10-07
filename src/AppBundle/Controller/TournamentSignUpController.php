@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Tournament;
 use AppBundle\Form\SignUpTournamentType;
 use AppBundle\Entity\SignUpTournament;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,23 +22,8 @@ class TournamentSignUpController extends Controller
     /**
      * @Route("/{id}/zapisy", name="tournament_sign_up")
      */
-    public function signUpAction(Tournament $tournament, SerializerInterface $serializer, Request $request)
+    public function signUpAction(Tournament $tournament, SerializerInterface $serializer, Request $request, EntityManagerInterface $em)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $signUpTournament = $this->getDoctrine()
-            ->getRepository('AppBundle:SignUpTournament')
-            ->findAllSortByMaleClassWeightSurname($tournament);
-
-        $users = $em->getRepository('AppBundle:SignUpTournament')
-            ->signUpUserOrder($tournament);
-
-        $fights = $em->getRepository('AppBundle:Fight')
-            ->fightReadyOrderBy($tournament);
-
-
-
-
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER') && ($this->getUser())->getType() != 3) {
 
             $user = $this->getUser();
@@ -137,21 +124,15 @@ class TournamentSignUpController extends Controller
                 'formDelete' => $formDelete->createView(),
                 'age' => $age,
                 'tournament' => $tournament,
-                'users' => $users,
                 'date_diff' => $date_diff,
                 'isUserRegister' => $isUserRegister,
-                'fights' => $fights,
-                'signUpTournament' => $serializer->normalize($signUpTournament),
             ));
 
         }
 
         return $this->render('tournament/sign_up.twig', array(
             'tournament' => $tournament,
-            'users' => $users,
-            'fights' => $fights,
             'isUserRegister' => null,
-            'signUpTournament' => $serializer->normalize($signUpTournament),
         ));
 
     }
