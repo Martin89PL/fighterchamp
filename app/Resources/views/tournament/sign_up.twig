@@ -4,10 +4,8 @@
 {% set isAvailableSeats = signUpTournament|length < tournament.capacity %}
 {% set isTournamentEnded = tournament.end|date('Y-m-d') < "now"|date('Y-m-d') %}
 
-
 {% block body %}
     {% include 'tournament/_parts/_panel.twig' %}
-
 <div class="main">
     <div class="container">
         <div class="row">
@@ -33,6 +31,7 @@
                         {% endif %}
 
                     {% else %}
+                  dwa
                         <p class="text-center">
                             Zgłoszenia przyjmowane są od {{ macro.formatYMDdzienTygodnia(tournament.signUpStart) }}
                         </p>
@@ -87,13 +86,11 @@
                                 {#<small>{{ include(template_from_string(tournament.paymentInfo)) }}</small>#}
                             {#</p>#}
                         {#{% endif %}#}
-
-                        {% if signUpOpen and isAvailableSeats %}
-
-                            {% include 'tournament/_parts/show_sing_up_form_if_inssurance_data_ELSE_link_to_profile.html.twig' %}
-
-                        {% endif %}
                         
+                    {% endif %}
+
+                    {% if signUpOpen and isAvailableSeats %}
+                        {% include 'tournament/_parts/show_sing_up_form_if_inssurance_data_ELSE_link_to_profile.html.twig' %}
                     {% endif %}
 
                 {% endif %}
